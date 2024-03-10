@@ -69,20 +69,21 @@ namespace yt_dlp_assistant
                         case 0:
                             Console.WriteLine("コマンドを入力してください。");
 
-                            Process process1 = new Process();
+                            Process proc0 = new Process();
                             Console.ForegroundColor = ConsoleColor.Cyan;
-                            process1.StartInfo.FileName = Console.ReadLine();
+                            string fileWithArgs = Console.ReadLine();
+                            proc0.StartInfo.FileName = fileWithArgs.Split(' ')[0];
+                            proc0.StartInfo.Arguments = fileWithArgs.Replace(proc0.StartInfo.FileName + " ", "");
                             Console.ForegroundColor = defaultColor;
 
-                            //process1.StartInfo.Arguments = $"-o \"{path}\\%(title)s.mp4\" {url} -f mp4";
-                            process1.StartInfo.UseShellExecute = false;
-                            process1.StartInfo.RedirectStandardOutput = true;
-                            process1.Start();
+                            proc0.StartInfo.UseShellExecute = false;
+                            proc0.StartInfo.RedirectStandardOutput = true;
+                            proc0.Start();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            while (!process1.StandardOutput.EndOfStream)
-                                Console.WriteLine(process1.StandardOutput.ReadLine());
-                            process1.WaitForExit();
-                            process1.Dispose();
+                            while (!proc0.StandardOutput.EndOfStream)
+                                Console.WriteLine(proc0.StandardOutput.ReadLine());
+                            proc0.WaitForExit();
+                            proc0.Dispose();
                             Console.ForegroundColor = defaultColor;
                             Console.WriteLine("完了しました。");
                             break;
@@ -119,18 +120,18 @@ namespace yt_dlp_assistant
                             {
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine($"{ytdlpPath} -o \"{path}\\%(title)s.mp4\" {url} -f mp4");
-                                Process process2 = new Process();
-                                process2.StartInfo.FileName = ytdlpPath;
-                                process2.StartInfo.Arguments = $"-o \"{path}\\%(title)s.mp4\" {url} -f mp4";
-                                process2.StartInfo.UseShellExecute = false;
-                                process2.StartInfo.RedirectStandardOutput = true;
-                                process2.Start();
+                                Process proc3 = new Process();
+                                proc3.StartInfo.FileName = ytdlpPath;
+                                proc3.StartInfo.Arguments = $"-o \"{path}\\%(title)s.mp4\" {url} -f mp4";
+                                proc3.StartInfo.UseShellExecute = false;
+                                proc3.StartInfo.RedirectStandardOutput = true;
+                                proc3.Start();
 
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                while (!process2.StandardOutput.EndOfStream)
-                                    Console.WriteLine(process2.StandardOutput.ReadLine());
-                                process2.WaitForExit();
-                                process2.Dispose();
+                                while (!proc3.StandardOutput.EndOfStream)
+                                    Console.WriteLine(proc3.StandardOutput.ReadLine());
+                                proc3.WaitForExit();
+                                proc3.Dispose();
                                 Console.ForegroundColor = defaultColor;
                                 Console.WriteLine("完了しました。");
                             }
