@@ -9,20 +9,18 @@ namespace yt_dlp_assistant
         static void Main(string[] args)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
-            Console.WriteLine("yt-dlp.exeとffmpeg.exeを準備して同じフォルダに配置してください。");
+            Console.WriteLine("yt-dlp.exeとffmpeg.exeを準備して同じフォルダまたはパスが通っているフォルダに配置してください。");
             Console.WriteLine("yt-dlp.exe:https://github.com/yt-dlp/yt-dlp/releases/latest");
             Console.WriteLine("ffmpeg.exe:https://ffmpeg.org/download.html (わからない場合調べてください)");
             while (true)
                 try
                 {
-                    if (!Directory.Exists("settings"))
-                        Directory.CreateDirectory("settings");
                     string ytdlpPath = "";
                     while (true)
                     {
                         string ytdlpPath_ = "";
-                        if (File.Exists("settings\\yt-dlp.path.txt"))
-                            ytdlpPath_ = File.ReadAllText("settings\\yt-dlp.path.txt");
+                        if (File.Exists(".yt-dlp assistant.yt-dlp.path.txt"))
+                            ytdlpPath_ = File.ReadAllText(".yt-dlp assistant.yt-dlp.path.txt");
                         else
                         {
                             Console.WriteLine("yt-dlp.exeのパスを入力してください。");
@@ -32,10 +30,10 @@ namespace yt_dlp_assistant
                         }
                         if (File.Exists(ytdlpPath_) && ytdlpPath_.Contains("yt-dlp.exe"))
                         {
-                            if (!File.Exists("settings\\yt-dlp.path.txt"))
+                            if (!File.Exists(".yt-dlp assistant.yt-dlp.path.txt"))
                             {
                                 Console.WriteLine("yt-dlp.exeが見つかりました。");
-                                File.WriteAllText("settings\\yt-dlp.path.txt", ytdlpPath_);
+                                File.WriteAllText(".yt-dlp assistant.yt-dlp.path.txt", ytdlpPath_);
                             }
                             ytdlpPath = ytdlpPath_;
                             break;
@@ -43,8 +41,8 @@ namespace yt_dlp_assistant
                         else
                         {
                             Console.WriteLine($"yt-dlp.exeが見つかりませんでした。({ytdlpPath_})");
-                            if (File.Exists("settings\\yt-dlp.path.txt"))
-                                File.Delete("settings\\yt-dlp.path.txt");
+                            if (File.Exists(".yt-dlp assistant.yt-dlp.path.txt"))
+                                File.Delete(".yt-dlp assistant.yt-dlp.path.txt");
                         }
                     }
 
@@ -88,29 +86,29 @@ namespace yt_dlp_assistant
                             Console.WriteLine("完了しました。");
                             break;
                         case 1:
-                            Console.WriteLine("保存するコマンドやメモを一行入力してください。`settings\\commands.txt`に追加されます。");
+                            Console.WriteLine("保存するコマンドやメモを一行入力してください。`.yt-dlp assistant.commands.txt`に追加されます。");
                             Console.ForegroundColor = ConsoleColor.DarkBlue;
                             string command = Console.ReadLine();
                             Console.ForegroundColor = defaultColor;
-                            if (File.Exists("settings\\commands.txt"))
-                                command = (File.ReadAllText("settings\\commands.txt") + "\n" + command).Replace("\n\n", "\n");
-                            File.WriteAllText("settings\\commands.txt", command);
+                            if (File.Exists(".yt-dlp assistant.commands.txt"))
+                                command = (File.ReadAllText(".yt-dlp assistant.commands.txt") + "\n" + command).Replace("\n\n", "\n");
+                            File.WriteAllText(".yt-dlp assistant.commands.txt", command);
                             break;
                         case 2:
-                            if (File.Exists("settings\\commands.txt"))
+                            if (File.Exists(".yt-dlp assistant.commands.txt"))
                             {
                                 Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine(File.ReadAllText("settings\\commands.txt"));
+                                Console.WriteLine(File.ReadAllText(".yt-dlp assistant.commands.txt"));
                                 Console.ForegroundColor = defaultColor;
                             }
                             else
-                                Console.WriteLine("`settings\\commands.txt`が見つかりませんでした。先に保存してください。");
+                                Console.WriteLine("`.yt-dlp assistant.commands.txt`が見つかりませんでした。先に保存してください。");
                             break;
                         case 3:
                             Console.WriteLine("`{yt-dlp.exeのパス} -o \"{入力されたフォルダのパス}\\%(title)s.mp4\" {入力されたURL} -f mp4`を実行します。スキップする場合URLを空白にしてください。");
-                            Console.WriteLine("保存するフォルダのパスを入力してください。(空白だとyt-dlpのフォルダ、`/c/`でこのyt-dlp assistant.exeがあるフォルダ、`/c/\\output`のように)");
+                            Console.WriteLine("保存するフォルダのパスを入力してください。(空白だと実行しているフォルダ)");
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            string path = Console.ReadLine().Replace("\"", "").Replace("/c/", Path.GetFullPath("yt-dlp assistant.exe").Replace("yt-dlp assistant.exe", ""));
+                            string path = Console.ReadLine().Replace("\"", "");
                             Console.ForegroundColor = defaultColor;
                             Console.WriteLine("URLを入力してください。");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -119,7 +117,7 @@ namespace yt_dlp_assistant
                             if (url != "")
                             {
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine($"{ytdlpPath} -o \"{path}\\%(title)s.mp4\" {url} -f mp4");
+                                Console.WriteLine($"{ytdlpPath} -o \"{path}{(path == "" ? "" : "\\")}%(title)s.mp4\" {url} -f mp4");
                                 Process proc3 = new Process();
                                 proc3.StartInfo.FileName = ytdlpPath;
                                 proc3.StartInfo.Arguments = $"-o \"{path}\\%(title)s.mp4\" {url} -f mp4";
